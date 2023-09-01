@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.serialization.Codec;
 import dev.lukebemish.worldgenflexiblifier.impl.dripstone.DripstoneClusterAlternateData;
-import dev.lukebemish.worldgenflexiblifier.impl.dripstone.DripstoneClusterHasData;
+import dev.lukebemish.worldgenflexiblifier.impl.dripstone.HasDripstoneData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -30,8 +30,8 @@ public abstract class DripstoneClusterFeatureMixin extends Feature<DripstoneClus
             )
     )
     private void worldgenflexiblifier$placeColumnGrow(LevelAccessor level, BlockPos pos, Direction direction, int height, boolean mergeTip, Operation<Void> operation, WorldGenLevel level2, RandomSource random, BlockPos pos2, int x, int z, float wetness, double chance, int height2, float density, DripstoneClusterConfiguration config) {
-        DripstoneClusterAlternateData data = ((DripstoneClusterHasData) config).worldgenflexiblifier$getAlternativeDripstoneData();
-        if (data.isDefault()) {
+        DripstoneClusterAlternateData data = ((HasDripstoneData) config).worldgenflexiblifier$getDripstoneData();
+        if (data == null || data.isDefault()) {
             operation.call(level, pos, direction, height, mergeTip);
         } else {
             data.growPointedDripstone(level, pos, direction, height, mergeTip);
@@ -46,8 +46,8 @@ public abstract class DripstoneClusterFeatureMixin extends Feature<DripstoneClus
             )
     )
     private void worldgenflexiblifier$placeColumnReplace(DripstoneClusterFeature feature, WorldGenLevel level, BlockPos pos, int thickness, Direction direction, Operation<Void> operation, WorldGenLevel level2, RandomSource random, BlockPos pos2, int x, int z, float wetness, double chance, int height, float density, DripstoneClusterConfiguration config) {
-        DripstoneClusterAlternateData data = ((DripstoneClusterHasData) config).worldgenflexiblifier$getAlternativeDripstoneData();
-        if (data.isDefault()) {
+        DripstoneClusterAlternateData data = ((HasDripstoneData) config).worldgenflexiblifier$getDripstoneData();
+        if (data == null || data.isDefault()) {
             operation.call(feature, level, pos, thickness, direction);
         } else {
             data.replaceBlocksWithDripstoneBlocks(level, pos, thickness, direction);

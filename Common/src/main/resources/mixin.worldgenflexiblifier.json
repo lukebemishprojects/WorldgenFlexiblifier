@@ -5,7 +5,12 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "dripstone.DripstoneClusterConfigurationMixin",
-    "dripstone.DripstoneClusterFeatureMixin"
+    "dripstone.DripstoneClusterFeatureMixin",
+    "dripstone.LargeDripstoneConfigurationMixin",
+    "dripstone.LargeDripstoneFeatureMixin",
+    "dripstone.LargeDripstoneMixin",
+    "dripstone.PointedDripstoneConfigurationMixin",
+    "dripstone.PointedDripstoneFeatureMixin"
   ],
   "client": [],
   "server": [],

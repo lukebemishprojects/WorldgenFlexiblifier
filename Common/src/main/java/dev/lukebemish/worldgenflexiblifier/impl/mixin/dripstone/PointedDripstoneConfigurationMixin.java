@@ -5,7 +5,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import dev.lukebemish.worldgenflexiblifier.impl.dripstone.DripstoneClusterAlternateData;
 import dev.lukebemish.worldgenflexiblifier.impl.dripstone.HasDripstoneData;
-import net.minecraft.world.level.levelgen.feature.configurations.DripstoneClusterConfiguration;
+import net.minecraft.world.level.levelgen.feature.configurations.PointedDripstoneConfiguration;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -13,9 +13,8 @@ import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.Objects;
 
-@Mixin(DripstoneClusterConfiguration.class)
-public class DripstoneClusterConfigurationMixin implements HasDripstoneData {
-
+@Mixin(PointedDripstoneConfiguration.class)
+public class PointedDripstoneConfigurationMixin implements HasDripstoneData {
 
     @Unique
     private DripstoneClusterAlternateData worldgenflexiblifier$alternativeDripstoneData = null;
@@ -31,13 +30,13 @@ public class DripstoneClusterConfigurationMixin implements HasDripstoneData {
     }
 
     @ModifyExpressionValue(
-            method = "<clinit>",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lcom/mojang/serialization/codecs/RecordCodecBuilder;create(Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;"
-            )
+        method = "<clinit>",
+        at = @At(
+            value = "INVOKE",
+            target = "Lcom/mojang/serialization/codecs/RecordCodecBuilder;create(Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;"
+        )
     )
-    private static Codec<DripstoneClusterConfiguration> worldgenflexiblifier$wrapCodecSet(Codec<DripstoneClusterConfiguration> originalCodec) {
+    private static Codec<PointedDripstoneConfiguration> worldgenflexiblifier$wrapCodecSet(Codec<PointedDripstoneConfiguration> originalCodec) {
         return Codec.pair(originalCodec, DripstoneClusterAlternateData.CODEC).xmap(p -> {
             var data = p.getFirst();
             ((HasDripstoneData) data).worldgenflexiblifier$setAlternativeDripstoneData(p.getSecond());

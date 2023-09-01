@@ -11,6 +11,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
@@ -18,9 +19,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.DripstoneThickness;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -41,6 +44,8 @@ public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator 
             TagKey.codec(Registries.BLOCK).optionalFieldOf("replaceable_tag", BlockTags.DRIPSTONE_REPLACEABLE).forGetter(DripstoneClusterAlternateData::replaceableTag)
     ).apply(i, DripstoneClusterAlternateData::new));
 
+    public static final DripstoneClusterAlternateData DEFAULT = new DripstoneClusterAlternateData(Blocks.DRIPSTONE_BLOCK, PointedDripstoneCreator.DEFAULT, BlockTags.DRIPSTONE_REPLACEABLE);
+
     public boolean isDefault() {
         return base == Blocks.DRIPSTONE_BLOCK && pointed == PointedDripstoneCreator.DEFAULT && replaceableTag == BlockTags.DRIPSTONE_REPLACEABLE;
     }
@@ -49,7 +54,7 @@ public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator 
         return state.is(base()) || state.is(replaceableTag);
     }
 
-    private boolean isDripstoneBaseOrLava(BlockState state) {
+    public boolean isDripstoneBaseOrLava(BlockState state) {
         return state.is(Blocks.LAVA) || isDripstoneBase(state);
     }
 
@@ -62,7 +67,9 @@ public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator 
             BlockPos.MutableBlockPos mutableBlockPos = pos.mutable();
             buildBaseToTipColumn(direction, height, mergeTip, (blockState) -> {
                 if (pointed().is(blockState)) {
-                    blockState = blockState.setValue(PointedDripstoneBlock.WATERLOGGED, level.isWaterAt(mutableBlockPos));
+                    if (blockState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                        blockState = blockState.setValue(BlockStateProperties.WATERLOGGED, level.isWaterAt(mutableBlockPos));
+                    }
                 }
 
                 level.setBlock(mutableBlockPos, blockState, 2);
@@ -96,6 +103,23 @@ public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator 
             mutableBlockPos.move(direction);
         }
 
+    }
+
+    public Optional<Direction> getTipDirection(LevelAccessor level, BlockPos pos, RandomSource random) {
+        boolean isBaseBelow = isDripstoneBase(level.getBlockState(pos.below()));
+        boolean isBaseAbove = isDripstoneBase(level.getBlockState(pos.above()));
+        if (isBaseAbove && isBaseBelow) {
+            return Optional.of(random.nextBoolean() ? Direction.DOWN : Direction.UP);
+        }
+        return isBaseAbove ? Optional.of(Direction.DOWN) : isBaseBelow ? Optional.of(Direction.UP) : Optional.empty();
+    }
+
+    public boolean placeDripstoneBlockIfPossible(LevelAccessor level, BlockPos pos) {
+        if (level.getBlockState(pos).is(replaceableTag())) {
+            level.setBlock(pos, base().defaultBlockState(), 2);
+            return true;
+        }
+        return false;
     }
 
     public interface PointedDripstoneCreator {
