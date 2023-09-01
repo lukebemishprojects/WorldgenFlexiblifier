@@ -1,0 +1,83 @@
+plugins {
+    id 'maven-publish'
+}
+
+apply plugin: 'org.quiltmc.loom'
+
+base.archivesName = "${artifact_id}-fabriquilt-${libs.versions.minecraft.get()}"
+
+configurations {
+    testCompileClasspath.extendsFrom(compileClasspath)
+}
+
+dependencies {
+    minecraft libs.minecraft
+    mappings loom.layered() {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip")
+    }
+    modImplementation libs.quilt.loader
+
+    implementation project(":Common")
+
+    compileOnly libs.autoservice
+    annotationProcessor libs.autoservice
+
+    include(implementation(annotationProcessor(libs.mixinextras.fabric.get())))
+}
+
+loom {
+    runs {
+        client {
+            client()
+            setConfigName("Quilt Client")
+            ideConfigGenerated(true)
+            runDir("run")
+        }
+        server {
+            server()
+            setConfigName("Quilt Server")
+            ideConfigGenerated(true)
+            runDir("runserver")
+        }
+    }
+
+    mixin {
+        defaultRefmapName = "worldgenflexiblifier.refmap.json"
+    }
+}
+
+processResources {
+    from project(":Common").sourceSets.main.resources
+    inputs.property "version", project.version
+
+    filesMatching("quilt.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile) {
+    source(project(":Common").sourceSets.main.allSource)
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${mod_name}"}
+    }
+}
+
+tasks.jar.finalizedBy(tasks.remapJar)
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            groupId project.group
+            artifactId base.archivesName.get()
+            version project.version
+            from components.java
+        }
+    }
+
+    repositories {
+    }
+}

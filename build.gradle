@@ -1,0 +1,79 @@
+plugins {
+    alias libs.plugins.quilt.licenser apply false
+    alias libs.plugins.mdg
+    alias libs.plugins.quilt.loom apply false
+}
+
+modsDotGroovy {
+    dslVersion = libs.versions.mdg.dsl.get()
+    platform 'multiloader'
+    multiloader {
+        forge = [project(':NeoForge')]
+        fabric = [project(':FabriQuilt')]
+        quilt = [project(':FabriQuilt')]
+    }
+}
+
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'idea'
+    apply plugin: 'maven-publish'
+    apply plugin: libs.plugins.quilt.licenser.get().pluginId
+
+    java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+    java.withSourcesJar()
+    java.withJavadocJar()
+
+    javadoc {
+        include "**/api/**"
+    }
+
+    license {
+        rule rootProject.file('header.txt')
+        exclude '**/*.mcmeta'
+        exclude '**/package-info.java'
+    }
+
+    jar {
+        manifest {
+            attributes([
+                    'Specification-Title'     : mod_name,
+                    'Specification-Vendor'    : mod_author,
+                    'Specification-Version'   : rootProject.version,
+                    'Implementation-Title'    : project.name,
+                    'Implementation-Version'  : rootProject.version,
+                    'Implementation-Vendor'   : mod_author,
+                    'Build-On-Minecraft'      : libs.versions.minecraft.get(),
+            ])
+        }
+    }
+
+    repositories {
+        mavenCentral()
+
+        maven {
+            name = 'Sponge / Mixin'
+            url = 'https://repo.spongepowered.org/repository/maven-public/'
+        }
+
+        maven {
+            name = 'ParchmentMC'
+            url = 'https://maven.parchmentmc.org'
+        }
+
+        maven {
+            name 'Quilt (Release)'
+            url 'https://maven.quiltmc.org/repository/release/'
+        }
+    }
+
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = 'UTF-8'
+        it.options.release = 17
+    }
+
+    dependencies {
+        compileOnly libs.jetbrains.annotations
+    }
+}
