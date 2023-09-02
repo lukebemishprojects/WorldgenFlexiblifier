@@ -49,7 +49,7 @@ public class LargeDripstoneFeatureMixin {
     )
     private boolean worldgenflexiblifier$wrapLargeDripstoneCreation(@Coerce Object largeDripstone, WorldGenLevel level, RandomSource random, @Coerce Object windOffsetter, FeaturePlaceContext<LargeDripstoneConfiguration> context) {
         var data = ((HasDripstoneData) context.config()).worldgenflexiblifier$getDripstoneData();
-        ((HasDripstoneData) largeDripstone).worldgenflexiblifier$setAlternativeDripstoneData(data);
+        ((HasDripstoneData) largeDripstone).worldgenflexiblifier$setDripstoneData(data);
         return true;
     }
 }

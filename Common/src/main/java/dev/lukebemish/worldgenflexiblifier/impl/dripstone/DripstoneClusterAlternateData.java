@@ -30,7 +30,7 @@ import java.util.function.Function;
 public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator pointed, TagKey<Block> replaceableTag) {
     public static final Codec<DripstoneClusterAlternateData> CODEC = RecordCodecBuilder.create(i -> i.group(
             BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf("base_block", Blocks.DRIPSTONE_BLOCK).forGetter(DripstoneClusterAlternateData::base),
-            Codec.either(BuiltInRegistries.BLOCK.byNameCodec().xmap(PointedDripstoneCreator.ByBlock::new, PointedDripstoneCreator.ByBlock::block), PointedDripstoneCreator.ByMap.CODEC)
+            Codec.either(PointedDripstoneCreator.ByBlock.CODEC, PointedDripstoneCreator.ByMap.CODEC)
                     .<PointedDripstoneCreator>flatXmap(e -> DataResult.success(e.map(Function.identity(), Function.identity())), creator -> {
                         if (creator instanceof PointedDripstoneCreator.ByBlock byBlock) {
                             return DataResult.success(Either.left(byBlock));
@@ -127,6 +127,7 @@ public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator 
         boolean is(BlockState state);
 
         record ByBlock(Block block) implements PointedDripstoneCreator {
+            public static final Codec<ByBlock> CODEC = BuiltInRegistries.BLOCK.byNameCodec().xmap(ByBlock::new, ByBlock::block).flatXmap(ByBlock::verify, DataResult::success);
 
             @Override
             public BlockState create(DripstoneThickness dripstoneThickness, Direction direction) {
@@ -136,6 +137,16 @@ public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator 
             @Override
             public boolean is(BlockState state) {
                 return state.is(block());
+            }
+
+            private static DataResult<ByBlock> verify(ByBlock byBlock) {
+                if (byBlock.block() == Blocks.POINTED_DRIPSTONE) {
+                    return DataResult.success(DEFAULT);
+                }
+                if (byBlock.block().defaultBlockState().hasProperty(PointedDripstoneBlock.THICKNESS) && byBlock.block().defaultBlockState().hasProperty(PointedDripstoneBlock.TIP_DIRECTION)) {
+                    return DataResult.success(byBlock);
+                }
+                return DataResult.error(() -> "Block " + BuiltInRegistries.BLOCK.getKey(byBlock.block()) + " does not have the necessary properties to be a pointed dripstone block. Perhaps try using a map based pointed block provider?");
             }
         }
 
@@ -168,6 +179,6 @@ public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator 
             }
         }
 
-        PointedDripstoneCreator DEFAULT = new ByBlock(Blocks.POINTED_DRIPSTONE);
+        ByBlock DEFAULT = new ByBlock(Blocks.POINTED_DRIPSTONE);
     }
 }

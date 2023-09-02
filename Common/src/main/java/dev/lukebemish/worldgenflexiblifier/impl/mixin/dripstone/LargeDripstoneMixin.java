@@ -18,7 +18,7 @@ public class LargeDripstoneMixin implements HasDripstoneData {
     private DripstoneClusterAlternateData worldgenflexiblifier$alternativeDripstoneData = null;
 
     @Override
-    public void worldgenflexiblifier$setAlternativeDripstoneData(DripstoneClusterAlternateData alt) {
+    public void worldgenflexiblifier$setDripstoneData(DripstoneClusterAlternateData alt) {
         this.worldgenflexiblifier$alternativeDripstoneData = alt;
     }
 

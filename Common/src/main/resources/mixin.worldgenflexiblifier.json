@@ -10,12 +10,19 @@
     "dripstone.LargeDripstoneFeatureMixin",
     "dripstone.LargeDripstoneMixin",
     "dripstone.PointedDripstoneConfigurationMixin",
-    "dripstone.PointedDripstoneFeatureMixin"
+    "dripstone.PointedDripstoneFeatureMixin",
+    "oreveins.NoiseGeneratorSettingsMixin",
+    "oreveins.NoiseChunkMixin",
+    "oreveins.RandomStateMixin"
   ],
   "client": [],
   "server": [],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 1,
+    "namespace": "worldgenflexiblifier",
+    "injectionPoints": [
+      "dev.lukebemish.worldgenflexiblifier.impl.utils.UniversalBeforeInvoke"
+    ]
   },
   "refmap": "worldgenflexiblifier.refmap.json"
 }

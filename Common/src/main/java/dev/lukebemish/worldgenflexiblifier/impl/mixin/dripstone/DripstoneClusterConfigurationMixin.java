@@ -21,7 +21,7 @@ public class DripstoneClusterConfigurationMixin implements HasDripstoneData {
     private DripstoneClusterAlternateData worldgenflexiblifier$alternativeDripstoneData = null;
 
     @Override
-    public void worldgenflexiblifier$setAlternativeDripstoneData(DripstoneClusterAlternateData alt) {
+    public void worldgenflexiblifier$setDripstoneData(DripstoneClusterAlternateData alt) {
         this.worldgenflexiblifier$alternativeDripstoneData = alt;
     }
 
@@ -40,7 +40,7 @@ public class DripstoneClusterConfigurationMixin implements HasDripstoneData {
     private static Codec<DripstoneClusterConfiguration> worldgenflexiblifier$wrapCodecSet(Codec<DripstoneClusterConfiguration> originalCodec) {
         return Codec.pair(originalCodec, DripstoneClusterAlternateData.CODEC).xmap(p -> {
             var data = p.getFirst();
-            ((HasDripstoneData) data).worldgenflexiblifier$setAlternativeDripstoneData(p.getSecond());
+            ((HasDripstoneData) data).worldgenflexiblifier$setDripstoneData(p.getSecond());
             return data;
         }, data -> {
             DripstoneClusterAlternateData alt = ((HasDripstoneData) data).worldgenflexiblifier$getDripstoneData();
