@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.lukebemish.worldgenflexiblifier.impl.Constants;
 import dev.lukebemish.worldgenflexiblifier.impl.utils.Codecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,7 +30,7 @@ import java.util.function.Function;
 
 public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator pointed, TagKey<Block> replaceableTag) {
     public static final Codec<DripstoneClusterAlternateData> CODEC = RecordCodecBuilder.create(i -> i.group(
-            BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf("base_block", Blocks.DRIPSTONE_BLOCK).forGetter(DripstoneClusterAlternateData::base),
+            BuiltInRegistries.BLOCK.byNameCodec().optionalFieldOf(Constants.id("base").toString(), Blocks.DRIPSTONE_BLOCK).forGetter(DripstoneClusterAlternateData::base),
             Codec.either(PointedDripstoneCreator.ByBlock.CODEC, PointedDripstoneCreator.ByMap.CODEC)
                     .<PointedDripstoneCreator>flatXmap(e -> DataResult.success(e.map(Function.identity(), Function.identity())), creator -> {
                         if (creator instanceof PointedDripstoneCreator.ByBlock byBlock) {
@@ -37,11 +38,11 @@ public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator 
                         } else if (creator instanceof PointedDripstoneCreator.ByMap byMap) {
                             return DataResult.success(Either.right(byMap));
                         } else {
-                            return DataResult.error(() -> "Pointed dripstone creator is not a serializable type!");
+                            return DataResult.error(() -> "Pointed dripstone creator is not a serializable material!");
                         }
                     })
-                    .optionalFieldOf("pointed_block", PointedDripstoneCreator.DEFAULT).forGetter(DripstoneClusterAlternateData::pointed),
-            TagKey.codec(Registries.BLOCK).optionalFieldOf("replaceable_tag", BlockTags.DRIPSTONE_REPLACEABLE).forGetter(DripstoneClusterAlternateData::replaceableTag)
+                    .optionalFieldOf(Constants.id("pointed").toString(), PointedDripstoneCreator.DEFAULT).forGetter(DripstoneClusterAlternateData::pointed),
+            TagKey.codec(Registries.BLOCK).optionalFieldOf(Constants.id("replaceable").toString(), BlockTags.DRIPSTONE_REPLACEABLE).forGetter(DripstoneClusterAlternateData::replaceableTag)
     ).apply(i, DripstoneClusterAlternateData::new));
 
     public static final DripstoneClusterAlternateData DEFAULT = new DripstoneClusterAlternateData(Blocks.DRIPSTONE_BLOCK, PointedDripstoneCreator.DEFAULT, BlockTags.DRIPSTONE_REPLACEABLE);

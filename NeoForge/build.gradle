@@ -19,7 +19,9 @@ minecraft {
             taskName 'Client'
             mods {
                 modClientRun {
+                    source sourceSets.test
                     source sourceSets.main
+                    source project(":Common").sourceSets.test
                     source project(":Common").sourceSets.main
                 }
             }
@@ -31,7 +33,9 @@ minecraft {
             taskName 'Server'
             mods {
                 modServerRun {
+                    source sourceSets.test
                     source sourceSets.main
+                    source project(":Common").sourceSets.test
                     source project(":Common").sourceSets.main
                 }
             }
@@ -84,6 +88,10 @@ tasks.withType(JavaCompile) {
 
 processResources {
     from project(":Common").sourceSets.main.resources
+}
+
+processTestResources {
+    from project(":Common").sourceSets.test.resources
 }
 
 jar.finalizedBy('reobfJar')

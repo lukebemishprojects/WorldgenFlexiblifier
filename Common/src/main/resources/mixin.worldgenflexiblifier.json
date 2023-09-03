@@ -10,10 +10,7 @@
     "dripstone.LargeDripstoneFeatureMixin",
     "dripstone.LargeDripstoneMixin",
     "dripstone.PointedDripstoneConfigurationMixin",
-    "dripstone.PointedDripstoneFeatureMixin",
-    "oreveins.NoiseGeneratorSettingsMixin",
-    "oreveins.NoiseChunkMixin",
-    "oreveins.RandomStateMixin"
+    "dripstone.PointedDripstoneFeatureMixin"
   ],
   "client": [],
   "server": [],

@@ -4,8 +4,8 @@
  */
 
 ModsDotGroovy.make {
-    modLoader = 'lowcodefml'
-    loaderVersion = '[1,)'
+    modLoader = 'javafml'
+    loaderVersion = '[47,)'
     issueTrackerUrl = 'https://github.com/lukebemish/WorldgenFlexiblifier/issues'
     license = 'LGPL-3.0-or-later'
 

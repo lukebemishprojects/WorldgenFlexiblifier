@@ -1,0 +1,11 @@
+{
+  "type": "forge:add_features",
+  "biomes": {
+    "type": "forge:any"
+  },
+  "features": [
+    "worldgenflexiblifier:gold_vein",
+    "worldgenflexiblifier:coal_vein"
+  ],
+  "step": "raw_generation"
+}
