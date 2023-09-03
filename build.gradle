@@ -45,7 +45,7 @@ subprojects {
                     'Specification-Title'     : mod_name,
                     'Specification-Vendor'    : mod_author,
                     'Specification-Version'   : rootProject.version,
-                    'Implementation-Title'    : project.name,
+                    'Implementation-Title'    : "${mod_name} - ${project.name}",
                     'Implementation-Version'  : rootProject.version,
                     'Implementation-Vendor'   : mod_author,
                     'Build-On-Minecraft'      : libs.versions.minecraft.get(),

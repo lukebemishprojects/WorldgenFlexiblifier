@@ -15,7 +15,7 @@ mdg_dsl = "1.5.1"
 
 jetbrains_annotations = "24.0.1"
 
-mixinextras = "0.2.0-beta.11"
+mixinextras = "0.2.0-rc.2"
 
 [libraries]
 minecraft = { module = "com.mojang:minecraft", version.ref = "minecraft" }
