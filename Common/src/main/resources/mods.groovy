@@ -6,7 +6,7 @@
 ModsDotGroovy.make {
     modLoader = 'javafml'
     loaderVersion = '[47,)'
-    issueTrackerUrl = 'https://github.com/lukebemish/WorldgenFlexiblifier/issues'
+    issueTrackerUrl = 'https://github.com/lukebemishprojects/WorldgenFlexiblifier/issues'
     license = 'LGPL-3.0-or-later'
 
     mod {
@@ -16,8 +16,8 @@ ModsDotGroovy.make {
         onQuilt {
             group = this.group
         }
-        displayUrl = 'https://github.com/lukebemish/WorldgenFlexiblifier'
-        contact.sources = 'https://github.com/lukebemish/WorldgenFlexiblifier'
+        displayUrl = 'https://github.com/lukebemishprojects/WorldgenFlexiblifier'
+        contact.sources = 'https://github.com/lukebemishprojects/WorldgenFlexiblifier'
         author 'Luke Bemish'
         description = "Removes hardcoding from various data-driven components of minecraft worldgen"
 
