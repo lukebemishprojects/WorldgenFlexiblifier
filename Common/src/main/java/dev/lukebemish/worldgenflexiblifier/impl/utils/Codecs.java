@@ -18,7 +18,7 @@ public final class Codecs {
     private Codecs() {}
 
     public static final Codec<BlockState> BLOCK_STATE =
-            Codec.either(BuiltInRegistries.BLOCK.byNameCodec(), BuiltInRegistries.BLOCK.byNameCodec().dispatch("block", BlockState::getBlock, block -> {
+            Codec.either(BuiltInRegistries.BLOCK.byNameCodec(), BuiltInRegistries.BLOCK.byNameCodec().dispatch("name", BlockState::getBlock, block -> {
                 BlockState defaultState = block.defaultBlockState();
                 if (defaultState.getValues().isEmpty()) {
                     return Codec.unit(defaultState);
