@@ -2,6 +2,8 @@ plugins {
     alias libs.plugins.neogradle
     alias libs.plugins.librarian
     alias libs.plugins.mixingradle
+    alias libs.plugins.minotaur
+    alias libs.plugins.curseforgegradle
 }
 
 apply plugin: 'java'
@@ -128,3 +130,41 @@ publishing {
     repositories {
     }
 }
+
+import net.darkhax.curseforgegradle.TaskPublishCurseForge;
+
+if (System.getenv('CURSEFORGE_KEY')) {
+    task curseforge(type: TaskPublishCurseForge) {
+        disableVersionDetection()
+        apiToken = System.getenv('CURSEFORGE_KEY')
+        projectId = '909775'
+        def mainFile = upload(projectId, tasks.jarJar)
+        mainFile.displayName = "Worldgen Flexiblifier [NeoForge] v$project.version"
+        mainFile.releaseType = "${project.release_type}"
+        mainFile.addModLoader('Forge','NeoForge')
+        mainFile.addGameVersion("${libs.versions.minecraft.get()}")
+    }
+
+    afterEvaluate {
+        tasks.curseforge.dependsOn tasks.jarJar
+    }
+}
+
+if (System.getenv('MODRINTH_KEY')) {
+    modrinth {
+        token = System.getenv('MODRINTH_KEY')
+        projectId = 'zk8VT5Nr'
+        versionNumber = "$project.version"
+        versionType = "${project.release_type}"
+        detectLoaders = false
+        uploadFile = tasks.jarJar
+        gameVersions = ["${libs.versions.minecraft.get()}"]
+        loaders = ['forge','neoforge']
+    }
+
+    afterEvaluate {
+        tasks.modrinth.dependsOn tasks.jarJar
+    }
+}
+
+tasks.build.dependsOn tasks.jarJar

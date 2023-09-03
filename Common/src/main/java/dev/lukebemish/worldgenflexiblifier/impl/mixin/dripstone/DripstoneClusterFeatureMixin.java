@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2023 Luke Bemish and contributors
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ */
+
 package dev.lukebemish.worldgenflexiblifier.impl.mixin.dripstone;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;

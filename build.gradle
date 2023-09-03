@@ -10,7 +10,12 @@ modsDotGroovy {
     multiloader {
         forge = [project(':NeoForge')]
         fabric = [project(':FabriQuilt')]
-        quilt = [project(':FabriQuilt')]
+    }
+}
+
+tasks.register('printVersionName') {
+    doLast{
+        println "GRADLE_VERSION=(${project.version})"
     }
 }
 
@@ -75,5 +80,20 @@ subprojects {
 
     dependencies {
         compileOnly libs.jetbrains.annotations
+    }
+
+    publishing {
+        repositories {
+            if (System.getenv('MAVEN_URL')) {
+                maven {
+                    name = 'PersonalMaven'
+                    url = uri(System.getenv('MAVEN_URL'))
+                    credentials {
+                        username = System.getenv('MAVEN_USER') ?: ''
+                        password = System.getenv('MAVEN_PASSWORD') ?: ''
+                    }
+                }
+            }
+        }
     }
 }

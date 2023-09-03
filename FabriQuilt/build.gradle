@@ -1,5 +1,7 @@
 plugins {
     id 'maven-publish'
+    alias libs.plugins.minotaur
+    alias libs.plugins.curseforgegradle
 }
 
 apply plugin: 'org.quiltmc.loom'
@@ -17,6 +19,7 @@ dependencies {
         parchment("org.parchmentmc.data:parchment-${libs.versions.parchment.minecraft.get()}:${libs.versions.parchment.mappings.get()}@zip")
     }
     modImplementation libs.quilt.loader
+    modImplementation libs.quilt.qfapi
 
     implementation project(":Common")
 
@@ -79,5 +82,45 @@ publishing {
     }
 
     repositories {
+    }
+}
+
+import net.darkhax.curseforgegradle.TaskPublishCurseForge;
+
+if (System.getenv('CURSEFORGE_KEY')) {
+    task curseforge(type: TaskPublishCurseForge) {
+        disableVersionDetection()
+        apiToken = System.getenv('CURSEFORGE_KEY')
+        projectId = '909775'
+        def mainFile = upload(projectId, tasks.remapJar)
+        mainFile.displayName = "Worldgen Flexiblifier [Fabric/Quilt] v$project.version"
+        mainFile.releaseType = "${project.release_type}"
+        mainFile.addModLoader('Fabric','Quilt')
+        mainFile.addGameVersion("${libs.versions.minecraft.get()}")
+        mainFile.addRequirement("fabric-api")
+    }
+
+    afterEvaluate {
+        tasks.curseforge.dependsOn tasks.remapJar
+    }
+}
+
+if (System.getenv('MODRINTH_KEY')) {
+    modrinth {
+        token = System.getenv('MODRINTH_KEY')
+        projectId = 'zk8VT5Nr'
+        versionNumber = "$project.version"
+        versionType = "${project.release_type}"
+        detectLoaders = false
+        uploadFile = tasks.remapJar
+        gameVersions = ["${libs.versions.minecraft.get()}"]
+        loaders = ['fabric','quilt']
+        dependencies {
+            required.project 'fabric-api'
+        }
+    }
+
+    afterEvaluate {
+        tasks.modrinth.dependsOn tasks.remapJar
     }
 }

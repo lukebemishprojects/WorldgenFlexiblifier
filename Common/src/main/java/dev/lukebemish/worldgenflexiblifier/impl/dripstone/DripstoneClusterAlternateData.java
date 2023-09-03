@@ -1,3 +1,8 @@
+/*
+ * Copyright (C) 2023 Luke Bemish and contributors
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ */
+
 package dev.lukebemish.worldgenflexiblifier.impl.dripstone;
 
 import com.mojang.datafixers.util.Either;
@@ -144,7 +149,7 @@ public record DripstoneClusterAlternateData(Block base, PointedDripstoneCreator 
                 if (byBlock.block() == Blocks.POINTED_DRIPSTONE) {
                     return DataResult.success(DEFAULT);
                 }
-                if (byBlock.block().defaultBlockState().hasProperty(PointedDripstoneBlock.THICKNESS) && byBlock.block().defaultBlockState().hasProperty(PointedDripstoneBlock.TIP_DIRECTION)) {
+                if (byBlock.block().defaultBlockState().hasProperty(BlockStateProperties.DRIPSTONE_THICKNESS) && byBlock.block().defaultBlockState().hasProperty(BlockStateProperties.VERTICAL_DIRECTION)) {
                     return DataResult.success(byBlock);
                 }
                 return DataResult.error(() -> "Block " + BuiltInRegistries.BLOCK.getKey(byBlock.block()) + " does not have the necessary properties to be a pointed dripstone block. Perhaps try using a map based pointed block provider?");

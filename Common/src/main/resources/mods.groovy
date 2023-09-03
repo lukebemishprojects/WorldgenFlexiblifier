@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 Luke Bemish, and contributors
+ * Copyright (C) 2023 Luke Bemish and contributors
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
@@ -23,9 +23,17 @@ ModsDotGroovy.make {
 
         dependencies {
             onForge {
-                forge = ">=${this.forgeVersion}"
+                forge = ">=${this.buildProperties.forge_compat}"
             }
             minecraft = this.minecraftVersionRange
+        }
+
+        onFabric {
+            entrypoints {
+                main = [
+                    'dev.lukebemish.worldgenflexiblifier.impl.fabriquilt.FabriQuiltInit'
+                ]
+            }
         }
     }
     onFabric {
