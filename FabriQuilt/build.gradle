@@ -91,7 +91,7 @@ if (System.getenv('CURSEFORGE_KEY')) {
     task curseforge(type: TaskPublishCurseForge) {
         disableVersionDetection()
         apiToken = System.getenv('CURSEFORGE_KEY')
-        projectId = '909775'
+        def projectId = '909775'
         def mainFile = upload(projectId, tasks.remapJar)
         mainFile.displayName = "Worldgen Flexiblifier [Fabric/Quilt] v$project.version"
         mainFile.releaseType = "${project.release_type}"
