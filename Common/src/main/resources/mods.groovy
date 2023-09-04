@@ -26,6 +26,9 @@ ModsDotGroovy.make {
                 forge = ">=${this.buildProperties.forge_compat}"
             }
             minecraft = this.minecraftVersionRange
+            onFabric {
+                fabric = ">=${this.libs.versions.quilt.qfapi.split('\\+')[1].split('-')[0]}"
+            }
         }
 
         onFabric {
