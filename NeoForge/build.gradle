@@ -145,6 +145,7 @@ if (System.getenv('CURSEFORGE_KEY')) {
         mainFile.releaseType = "${project.release_type}"
         mainFile.addModLoader('Forge','NeoForge')
         mainFile.addGameVersion("${libs.versions.minecraft.get()}")
+        mainFile.changelog = ''
     }
 
     afterEvaluate {
